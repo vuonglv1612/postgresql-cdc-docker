@@ -1,0 +1,24 @@
+version: '3.5'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: postgres-cdc:9.6
+    env_file:
+      - .env
+    command: postgres -c config_file=/etc/postgresql.conf
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-changeme}
+      POSTGRES_DB: ${POSTGRES_DB:-test_db}
+    volumes:
+      - ./postgresql.conf:/etc/postgresql.conf
+      - postgres:/var/lib/postgresql/data
+    restart: unless-stopped
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres:
